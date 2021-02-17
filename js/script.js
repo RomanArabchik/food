@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    /////// TABS
     let tabs = document.querySelectorAll('.tabheader__item'),
           tabsContent = document.querySelectorAll('.tabcontent'),
           tabsParent = document.querySelector('.tabheader__items');
@@ -35,4 +36,57 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     });
+
+    
+    //////// TIMER
+    const deadline = '2021-05-11';
+
+    function getTimeRemaining(endtime) {
+        const t = Date.parse(endtime)- Date.parse(new Date()),
+              days = Math.floor(t/(1000*60*60*24)),
+              hours = Math.floor((t/(1000*60*60)) % 24),
+              minutes = Math.floor(t/(1000*60) % 60),
+              seconds = Math.floor(t/(1000) % 60);
+        return {
+            'total': t,
+            'days': days, //// можно написать сокращенно просто days, если имя ключа и переменной совпадает
+            'hours' : hours,
+            'minutes': minutes,
+            'seconds': seconds
+        };  
+    }
+
+
+    function getZero (num) {
+        if (num >= 0 && num < 10) {
+            return `0${num}`;
+        } else {
+            return num;
+        }
+    }
+
+    function setClock(selector, endtime) {
+        const timer = document.querySelector(selector),
+              days = timer.querySelector('#days'),
+              hours = timer.querySelector('#hours'),
+              minutes = timer.querySelector('#minutes'),
+              seconds = timer.querySelector('#seconds'),
+              timeInterval = setInterval(updateClock, 1000);
+        
+        updateClock(); // вызываем сразу, чтобы убрать моргание верстки и сразу установить наш таймер, а не через 1 сек.
+        
+        function updateClock() {
+            const t = getTimeRemaining(endtime);
+
+            days.innerHTML = getZero(t.days);
+            hours.innerHTML = getZero(t.hours);
+            minutes.innerHTML = getZero(t.minutes);
+            seconds.innerHTML = getZero(t.seconds);
+
+            if (t.total <= 0) {
+                clearInterval(timeInterval);
+            }
+        }
+    }
+    setClock('.timer', deadline);
 });
